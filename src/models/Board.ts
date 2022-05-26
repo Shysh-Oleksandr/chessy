@@ -12,6 +12,7 @@ export class Board {
   cells: Cell[][] = [];
   lostBlackFigures: Figure[] = [];
   lostWhiteFigures: Figure[] = [];
+  selectedCell: Cell | null = null;
 
   public initCells() {
     for (let i = 0; i < 8; i++) {

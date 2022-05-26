@@ -12,7 +12,7 @@ function LostFigures({ title, figures }: LostFiguresProps) {
       <h3>{title}</h3>
       {figures.map((figure) => {
         return (
-          <div key={figure.id} className="lost_figure">
+          <div key={figure.id} className="lost__figure">
             <h4>{figure.name}</h4>
             <div>
               {figure.logo && <img width={20} height={20} src={figure.logo} />}

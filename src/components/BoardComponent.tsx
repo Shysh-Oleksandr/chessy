@@ -4,6 +4,7 @@ import CellComponent from "./CellComponent";
 import { Cell } from "./../models/Cell";
 import { Player } from "../models/Player";
 import { Colors } from "../models/Colors";
+import PlayerColor from "./UI/PlayerColor";
 interface BoardProps {
   board: Board;
   setBoard: (board: Board) => void;
@@ -17,7 +18,9 @@ const BoardComponent: FC<BoardProps> = ({
   swapPlayer,
   currentPlayer,
 }) => {
-  const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
+  const [selectedCell, setSelectedCell] = useState<Cell | null>(
+    board.selectedCell
+  );
 
   function click(cell: Cell) {
     if (
@@ -53,13 +56,7 @@ const BoardComponent: FC<BoardProps> = ({
         <span>
           Current Player: {currentPlayer?.name || currentPlayer?.color}
         </span>
-        <span
-          style={{
-            backgroundColor:
-              currentPlayer?.color === Colors.WHITE ? "#fff" : "#000",
-          }}
-          className="currentPlayer__color"
-        ></span>
+        <PlayerColor color={currentPlayer!.color} />
       </h3>
       <div className="board">
         {board.cells.map((row, index) => {

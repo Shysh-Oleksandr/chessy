@@ -7,6 +7,7 @@ interface TimerProps {
   whitePlayer: Player | null;
   blackPlayer: Player | null;
   restart: () => void;
+  setIsGameStarted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Timer = ({
@@ -14,6 +15,7 @@ const Timer = ({
   restart,
   whitePlayer,
   blackPlayer,
+  setIsGameStarted,
 }: TimerProps) => {
   const [whiteTime, setWhiteTime] = useState<number>(whitePlayer?.time || 300);
   const [blackTime, setBlackTime] = useState<number>(blackPlayer?.time || 300);
@@ -44,16 +46,15 @@ const Timer = ({
   }
 
   function handleRestart() {
-    setWhiteTime(300);
-    setBlackTime(300);
+    setWhiteTime(whitePlayer?.time || 300);
+    setBlackTime(blackPlayer?.time || 300);
     restart();
   }
 
   return (
-    <div>
-      <div>
-        <button onClick={handleRestart}>Restart Game</button>
-      </div>
+    <div className="timerPanel">
+      <button onClick={() => setIsGameStarted(false)}>Back to menu</button>
+      <button onClick={handleRestart}>Restart Game</button>
       <h2>Black - {blackTime}</h2>
       <h2>White - {whiteTime}</h2>
     </div>

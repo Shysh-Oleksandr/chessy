@@ -6,6 +6,7 @@ import { Player } from "./models/Player";
 import { Colors } from "./models/Colors";
 import LostFigures from "./components/LostFigures";
 import Timer from "./components/Timer";
+import PlayerColor from "./components/UI/PlayerColor";
 
 const App = () => {
   const [board, setBoard] = useState<Board>(new Board());
@@ -21,14 +22,15 @@ const App = () => {
 
   useEffect(() => {
     restart();
-    setCurrentPlayer(whitePlayer);
   }, []);
 
   function restart() {
     const newBoard = new Board();
     newBoard.initCells();
     newBoard.addFigures();
+    newBoard.selectedCell = null;
     setBoard(newBoard);
+    setCurrentPlayer(whitePlayer);
   }
 
   function swapPlayer() {
@@ -42,12 +44,14 @@ const App = () => {
 
     setIsGameStarted(true);
     setWhitePlayer((prev) => {
-      prev.time = Number(whitePlayerTimeRef.current?.value);
+      let whiteTime = Number(whitePlayerTimeRef.current?.value);
+      prev.time = whiteTime > 10 ? whiteTime : 10;
       prev.name = whitePlayerNameRef.current?.value || null;
       return prev;
     });
     setBlackPlayer((prev) => {
-      prev.time = Number(blackPlayerTimeRef.current?.value);
+      let blackTime = Number(blackPlayerTimeRef.current?.value);
+      prev.time = blackTime > 10 ? blackTime : 10;
       prev.name = blackPlayerNameRef.current?.value || null;
       return prev;
     });
@@ -57,6 +61,7 @@ const App = () => {
     return (
       <div className="app">
         <Timer
+          setIsGameStarted={setIsGameStarted}
           whitePlayer={whitePlayer}
           blackPlayer={blackPlayer}
           currentPlayer={currentPlayer}
@@ -93,6 +98,7 @@ const App = () => {
                 className="players__label players__name"
               >
                 Player 1
+                <PlayerColor color={Colors.WHITE} />
               </label>
               <input
                 ref={whitePlayerNameRef}
@@ -121,7 +127,7 @@ const App = () => {
                 htmlFor="player2-timer"
                 className="players__label players__name"
               >
-                Player 2
+                Player 2 <PlayerColor color={Colors.BLACK} />
               </label>
               <input
                 ref={blackPlayerNameRef}
