@@ -4,12 +4,19 @@ import { Player } from "../models/Player";
 
 interface TimerProps {
   currentPlayer: Player | null;
+  whitePlayer: Player | null;
+  blackPlayer: Player | null;
   restart: () => void;
 }
 
-const Timer = ({ currentPlayer, restart }: TimerProps) => {
-  const [blackTime, setBlackTime] = useState<number>(300);
-  const [whiteTime, setWhiteTime] = useState<number>(300);
+const Timer = ({
+  currentPlayer,
+  restart,
+  whitePlayer,
+  blackPlayer,
+}: TimerProps) => {
+  const [whiteTime, setWhiteTime] = useState<number>(whitePlayer?.time || 300);
+  const [blackTime, setBlackTime] = useState<number>(blackPlayer?.time || 300);
 
   const timer = useRef<null | ReturnType<typeof setInterval>>(null);
 

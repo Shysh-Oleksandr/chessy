@@ -3,6 +3,7 @@ import { Board } from "./../models/Board";
 import CellComponent from "./CellComponent";
 import { Cell } from "./../models/Cell";
 import { Player } from "../models/Player";
+import { Colors } from "../models/Colors";
 interface BoardProps {
   board: Board;
   setBoard: (board: Board) => void;
@@ -48,7 +49,18 @@ const BoardComponent: FC<BoardProps> = ({
 
   return (
     <div>
-      <h3 className="current_player">Current Player: {currentPlayer?.color}</h3>
+      <h3 className="currentPlayer">
+        <span>
+          Current Player: {currentPlayer?.name || currentPlayer?.color}
+        </span>
+        <span
+          style={{
+            backgroundColor:
+              currentPlayer?.color === Colors.WHITE ? "#fff" : "#000",
+          }}
+          className="currentPlayer__color"
+        ></span>
+      </h3>
       <div className="board">
         {board.cells.map((row, index) => {
           return (
