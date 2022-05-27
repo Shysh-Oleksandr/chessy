@@ -6,7 +6,7 @@ import { King } from "./figures/King";
 import { Knight } from "./figures/Knight";
 import { Bishop } from "./figures/Bishop";
 import { Rook } from "./figures/Rook";
-import { Figure } from "./figures/Figure";
+import { Figure, FigureNames } from "./figures/Figure";
 
 export class Board {
   cells: Cell[][] = [];
@@ -36,6 +36,44 @@ export class Board {
         target.available = !!selectedCell?.figure?.canMove(target);
       }
     }
+  }
+
+  getKingCell(kingColor: Colors) {
+    for (let i = 0; i < this.cells.length; i++) {
+      const row: Cell[] = this.cells[i];
+      for (let j = 0; j < this.cells.length; j++) {
+        const cell = row[j];
+        if (
+          cell.figure?.name === FigureNames.KING &&
+          cell.figure.color === kingColor
+        ) {
+          return cell;
+        }
+      }
+    }
+  }
+
+  isChess(currentPlayerColor: Colors): boolean {
+    const kingCell = this.getKingCell(currentPlayerColor);
+
+    for (let i = 0; i < this.cells.length; i++) {
+      const row: Cell[] = this.cells[i];
+      for (let j = 0; j < this.cells.length; j++) {
+        const target: Cell = row[j];
+        if (
+          target.figure &&
+          kingCell &&
+          target.figure.color !== currentPlayerColor &&
+          target.figure.canMove(kingCell)
+        ) {
+          console.log("yep!");
+
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   public getCopyBoard(): Board {

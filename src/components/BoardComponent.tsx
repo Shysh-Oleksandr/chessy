@@ -12,7 +12,7 @@ interface BoardProps {
   currentPlayer: Player | null;
 }
 
-const letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
+const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
 const BoardComponent: FC<BoardProps> = ({
   board,
@@ -31,6 +31,12 @@ const BoardComponent: FC<BoardProps> = ({
       selectedCell.figure?.canMove(cell)
     ) {
       selectedCell.moveFigure(cell);
+
+      console.log(
+        board.isChess(
+          currentPlayer?.color === Colors.BLACK ? Colors.WHITE : Colors.BLACK
+        )
+      );
       swapPlayer();
       setSelectedCell(null);
     } else if (
@@ -46,6 +52,8 @@ const BoardComponent: FC<BoardProps> = ({
   useEffect(() => {
     highlightCells();
   }, [selectedCell]);
+
+  useEffect(() => {}, [currentPlayer]);
 
   function highlightCells() {
     board.highlightCells(selectedCell);
