@@ -22,6 +22,8 @@ const BoardComponent: FC<BoardProps> = ({
     board.selectedCell
   );
 
+  const letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
+
   function click(cell: Cell) {
     if (
       selectedCell &&
@@ -58,23 +60,43 @@ const BoardComponent: FC<BoardProps> = ({
         </span>
         <PlayerColor color={currentPlayer!.color} />
       </h3>
-      <div className="board">
-        {board.cells.map((row, index) => {
-          return (
-            <React.Fragment key={index}>
-              {row.map((cell) => (
-                <CellComponent
-                  selected={
-                    cell.x === selectedCell?.x && cell.y === selectedCell?.y
-                  }
-                  cell={cell}
-                  key={cell.id}
-                  click={click}
-                />
-              ))}
-            </React.Fragment>
-          );
-        })}
+      <div className="board-container">
+        <ul className="numbers-line">
+          {letters.map((letter, index) => {
+            return (
+              <li key={letter + index} className="numbers-line__item">
+                {index + 1}
+              </li>
+            );
+          })}
+        </ul>
+        <div className="board">
+          {board.cells.map((row, index) => {
+            return (
+              <React.Fragment key={index}>
+                {row.map((cell) => (
+                  <CellComponent
+                    selected={
+                      cell.x === selectedCell?.x && cell.y === selectedCell?.y
+                    }
+                    cell={cell}
+                    key={cell.id}
+                    click={click}
+                  />
+                ))}
+              </React.Fragment>
+            );
+          })}
+        </div>
+        <ul className="letters-line">
+          {letters.map((letter, index) => {
+            return (
+              <li key={letter + index} className="letters-line__item">
+                {letter}
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );
