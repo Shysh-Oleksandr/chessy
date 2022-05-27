@@ -12,6 +12,8 @@ interface BoardProps {
   currentPlayer: Player | null;
 }
 
+const letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
+
 const BoardComponent: FC<BoardProps> = ({
   board,
   setBoard,
@@ -22,8 +24,6 @@ const BoardComponent: FC<BoardProps> = ({
     board.selectedCell
   );
 
-  const letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
-
   function click(cell: Cell) {
     if (
       selectedCell &&
@@ -33,8 +33,13 @@ const BoardComponent: FC<BoardProps> = ({
       selectedCell.moveFigure(cell);
       swapPlayer();
       setSelectedCell(null);
-    } else if (cell.figure && cell.figure?.color === currentPlayer?.color) {
+    } else if (
+      selectedCell !== cell &&
+      cell.figure?.color === currentPlayer?.color
+    ) {
       setSelectedCell(cell);
+    } else {
+      setSelectedCell(null);
     }
   }
 
