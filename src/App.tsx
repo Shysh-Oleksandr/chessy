@@ -14,6 +14,7 @@ const App = () => {
   const [whitePlayer, setWhitePlayer] = useState(new Player(Colors.WHITE));
   const [blackPlayer, setBlackPlayer] = useState(new Player(Colors.BLACK));
   const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
 
   const whitePlayerTimeRef = useRef() as RefObject<HTMLInputElement>;
   const blackPlayerTimeRef = useRef() as RefObject<HTMLInputElement>;
@@ -66,14 +67,19 @@ const App = () => {
           blackPlayer={blackPlayer}
           currentPlayer={currentPlayer}
           restart={restart}
+          isPaused={isPaused}
         />
         <BoardComponent
           board={board}
           setBoard={setBoard}
           swapPlayer={swapPlayer}
           currentPlayer={currentPlayer}
+          whitePlayer={whitePlayer}
+          blackPlayer={blackPlayer}
+          isPaused={isPaused}
+          setIsPaused={setIsPaused}
         />
-        <div>
+        <div className="lost__container">
           <LostFigures
             title="Black Figures: "
             figures={board.lostBlackFigures}

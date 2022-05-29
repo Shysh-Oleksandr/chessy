@@ -6,11 +6,18 @@ import { Player } from "../models/Player";
 import { Colors } from "../models/Colors";
 import PlayerColor from "./UI/PlayerColor";
 import { getReverseColor } from "./../utils/functions";
+import { AiOutlinePause } from "react-icons/ai";
+import { BsFillPlayFill } from "react-icons/bs";
+
 interface BoardProps {
   board: Board;
   setBoard: (board: Board) => void;
   swapPlayer: () => void;
   currentPlayer: Player | null;
+  whitePlayer: Player | null;
+  blackPlayer: Player | null;
+  isPaused: boolean;
+  setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
@@ -20,12 +27,17 @@ const BoardComponent: FC<BoardProps> = ({
   setBoard,
   swapPlayer,
   currentPlayer,
+  whitePlayer,
+  blackPlayer,
+  isPaused,
+  setIsPaused,
 }) => {
   const [selectedCell, setSelectedCell] = useState<Cell | null>(
     board.selectedCell
   );
   const [isCheck, setIsCheck] = useState(false);
   const [isCheckmate, setIsCheckmate] = useState(false);
+  const [isWon, setIsWon] = useState<boolean>(false);
 
   function checkChess() {
     const currentColor = getReverseColor(currentPlayer?.color!);
@@ -35,6 +47,7 @@ const BoardComponent: FC<BoardProps> = ({
       const isCheckmate = board.isCheckmate(currentColor);
       console.log(isCheckmate);
       setIsCheckmate(isCheckmate);
+      setIsWon(isCheckmate);
     }
 
     return isKingUnderAttack;
@@ -71,9 +84,18 @@ const BoardComponent: FC<BoardProps> = ({
     updateBoard();
   }
 
+  function pauseGame() {}
+
   function updateBoard() {
     const newBoard = board.getCopyBoard();
     setBoard(newBoard);
+  }
+
+  function getWinnerName() {
+    const winner =
+      currentPlayer?.color === Colors.BLACK ? whitePlayer : blackPlayer;
+
+    return winner?.name || winner?.color.toString();
   }
 
   return (
@@ -90,9 +112,26 @@ const BoardComponent: FC<BoardProps> = ({
             {isCheckmate ? "Checkmate!" : "Check!"}
           </h3>
         )}
+        <button className="pause-btn" onClick={() => setIsPaused(!isPaused)}>
+          {isPaused ? <BsFillPlayFill /> : <AiOutlinePause />}
+        </button>
       </div>
 
       <div className="board-container">
+        {isWon && (
+          <div className="victory">
+            <h3 className="victory__player">
+              <span>{getWinnerName()}</span> won!
+            </h3>
+            <h2 className="victory__reason">{isCheckmate && "Checkmate!"}</h2>
+          </div>
+        )}
+        {isPaused && (
+          <div className="paused" onClick={() => setIsPaused(false)}>
+            <h2>Paused</h2>
+            <p>Click to continue...</p>
+          </div>
+        )}
         <ul className="numbers-line">
           {letters.map((letter, index) => {
             return (
