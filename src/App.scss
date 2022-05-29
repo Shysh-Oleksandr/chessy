@@ -178,13 +178,6 @@ h6 {
   background-color: green;
 }
 
-.currentPlayer {
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-}
-
 .currentPlayer__color {
   display: inline-block;
   width: 1.5rem;
@@ -331,5 +324,18 @@ h6 {
     &:hover {
       background-color: rgb(156, 151, 151);
     }
+  }
+}
+
+.game-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+
+  .currentPlayer {
+    display: flex;
+    align-items: center;
   }
 }

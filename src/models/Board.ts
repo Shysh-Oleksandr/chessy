@@ -7,6 +7,8 @@ import { Knight } from "./figures/Knight";
 import { Bishop } from "./figures/Bishop";
 import { Rook } from "./figures/Rook";
 import { Figure, FigureNames } from "./figures/Figure";
+import { Player } from "./Player";
+import { getReverseColor } from "../utils/functions";
 
 export class Board {
   cells: Cell[][] = [];
@@ -29,34 +31,42 @@ export class Board {
     }
   }
 
+  // Find all posible cells to move from the selected cell.
+  // Returns number of possible cells.
   public highlightCells(selectedCell: Cell | null) {
+    let possibleCells = 0;
     for (let i = 0; i < this.cells.length; i++) {
-      const row: Cell[] = this.cells[i];
       for (let j = 0; j < this.cells.length; j++) {
-        const target: Cell = row[j];
+        const target: Cell = this.cells[i][j];
+
+        // Check if a figure can move to the target cell.
         if (selectedCell?.figure?.canMove(target)) {
+          // Move to it and if it has a figure, get it, else get null.
           const figureToReturn = selectedCell.moveFigure(target, true);
 
+          // Check whether it is the check.
           if (this.isKingUnderAttack(target.figure!.color)) {
-            target.moveFigure(selectedCell, true, figureToReturn);
-
+            // Then figure cannot move to this cell.
             target.available = false;
           } else {
-            target.moveFigure(selectedCell, true, figureToReturn);
+            // Otherwise, it can.
+            possibleCells++;
             target.available = true;
           }
+          // Move a figure back to initial position and if there was a figure eaten, return it back.
+          target.moveFigure(selectedCell, true, figureToReturn);
         } else {
           target.available = false;
         }
       }
     }
+    return possibleCells;
   }
 
   getKingCell(kingColor: Colors) {
     for (let i = 0; i < this.cells.length; i++) {
-      const row: Cell[] = this.cells[i];
       for (let j = 0; j < this.cells.length; j++) {
-        const cell = row[j];
+        const cell = this.cells[i][j];
         if (
           cell.figure?.name === FigureNames.KING &&
           cell.figure.color === kingColor
@@ -71,12 +81,12 @@ export class Board {
     const kingCell = this.getKingCell(currentPlayerColor);
 
     for (let i = 0; i < this.cells.length; i++) {
-      const row: Cell[] = this.cells[i];
       for (let j = 0; j < this.cells.length; j++) {
-        const target: Cell = row[j];
+        const target: Cell = this.cells[i][j];
+        // If any figure can move to king's cell, then it's the check.
         if (
-          target.figure &&
           kingCell &&
+          target.figure &&
           target.figure.color !== currentPlayerColor &&
           target.figure.canMove(kingCell)
         ) {
@@ -90,20 +100,32 @@ export class Board {
     return false;
   }
 
-  public deepClone = (): Board => {
-    let clone: Board = Object.assign(
-      Object.create(Object.getPrototypeOf(this)),
-      this
-    );
-    clone.name = "second board";
-    const newSelectedCell = this.selectedCell;
-    if (newSelectedCell) {
-      newSelectedCell.board = clone;
-      clone.selectedCell = newSelectedCell;
-      console.log(newSelectedCell.board === clone, clone.selectedCell);
+  areTherePossibleMoves(currentPlayerColor: Colors): boolean {
+    for (let i = 0; i < this.cells.length; i++) {
+      for (let j = 0; j < this.cells.length; j++) {
+        const target: Cell = this.cells[i][j];
+        // If any figure can move to king's cell, then it's the check.
+        if (
+          target.figure &&
+          target.figure.color !== currentPlayerColor &&
+          this.highlightCells(target) > 0
+        )
+          return true;
+      }
     }
-    return clone;
-  };
+    return false;
+  }
+
+  public isCheckmate(currentPlayerColor: Colors) {
+    if (
+      this.isKingUnderAttack(currentPlayerColor) &&
+      !this.areTherePossibleMoves(getReverseColor(currentPlayerColor))
+    ) {
+      console.log("Checkmate!");
+      return true;
+    }
+    return false;
+  }
 
   public getCopyBoard(): Board {
     const newBoard = new Board();

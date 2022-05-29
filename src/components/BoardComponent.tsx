@@ -5,6 +5,7 @@ import { Cell } from "./../models/Cell";
 import { Player } from "../models/Player";
 import { Colors } from "../models/Colors";
 import PlayerColor from "./UI/PlayerColor";
+import { getReverseColor } from "./../utils/functions";
 interface BoardProps {
   board: Board;
   setBoard: (board: Board) => void;
@@ -23,13 +24,18 @@ const BoardComponent: FC<BoardProps> = ({
   const [selectedCell, setSelectedCell] = useState<Cell | null>(
     board.selectedCell
   );
-  const [isChess, setIsChess] = useState(false);
+  const [isCheck, setIsCheck] = useState(false);
+  const [isCheckmate, setIsCheckmate] = useState(false);
 
   function checkChess() {
-    const isKingUnderAttack = board.isKingUnderAttack(
-      currentPlayer?.color === Colors.BLACK ? Colors.WHITE : Colors.BLACK
-    );
-    setIsChess(isKingUnderAttack);
+    const currentColor = getReverseColor(currentPlayer?.color!);
+    const isKingUnderAttack = board.isKingUnderAttack(currentColor);
+    setIsCheck(isKingUnderAttack);
+    if (isKingUnderAttack) {
+      const isCheckmate = board.isCheckmate(currentColor);
+      console.log(isCheckmate);
+      setIsCheckmate(isCheckmate);
+    }
 
     return isKingUnderAttack;
   }
@@ -55,11 +61,6 @@ const BoardComponent: FC<BoardProps> = ({
     }
   }
 
-  // useEffect(() => {
-  //   checkChess();
-  //   setSelectedCell(null);
-  // }, []);
-
   useEffect(() => {
     board.selectedCell = selectedCell;
     highlightCells();
@@ -77,12 +78,20 @@ const BoardComponent: FC<BoardProps> = ({
 
   return (
     <div>
-      <h3 className="currentPlayer">
-        <span>
-          Current Player: {currentPlayer?.name || currentPlayer?.color}
-        </span>
-        <PlayerColor color={currentPlayer!.color} />
-      </h3>
+      <div className="game-status">
+        <h3 className="currentPlayer">
+          <span>
+            Current Player: {currentPlayer?.name || currentPlayer?.color}
+          </span>
+          <PlayerColor color={currentPlayer!.color} />
+        </h3>
+        {isCheck && (
+          <h3 className="check-label">
+            {isCheckmate ? "Checkmate!" : "Check!"}
+          </h3>
+        )}
+      </div>
+
       <div className="board-container">
         <ul className="numbers-line">
           {letters.map((letter, index) => {
@@ -121,7 +130,6 @@ const BoardComponent: FC<BoardProps> = ({
           })}
         </ul>
       </div>
-      {isChess && <h3>Chess!</h3>}
     </div>
   );
 };
