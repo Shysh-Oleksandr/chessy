@@ -138,7 +138,21 @@ export class Board {
     return newBoard;
   }
 
-  public getCell(x: number, y: number) {
+  checkPawnDoubleStep(currentPlayerColor: Colors) {
+    for (let i = 0; i < this.cells.length; i++) {
+      for (let j = 0; j < this.cells.length; j++) {
+        const target: Cell = this.cells[i][j];
+        // If any figure can move to king's cell, then it's the check.
+        if (
+          target.figure instanceof Pawn &&
+          target.figure.color !== currentPlayerColor
+        )
+          target.figure.wasDoubleStep = false;
+      }
+    }
+  }
+
+  public getCell(x: number, y: number): Cell {
     return this.cells[y][x];
   }
 

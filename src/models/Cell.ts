@@ -1,6 +1,7 @@
 import { Board } from "./Board";
 import { Colors } from "./Colors";
 import { Figure } from "./figures/Figure";
+import { Pawn } from "./figures/Pawn";
 
 export class Cell {
   readonly x: number;
@@ -106,6 +107,9 @@ export class Cell {
       }
 
       this.figure.moveFigure(target, test);
+      if (!test) {
+        this.board.checkPawnDoubleStep(this.figure.color);
+      }
 
       target.setFigure(this.figure);
       this.figure = figureToReturn;
