@@ -60,11 +60,12 @@ const BoardComponent: FC<BoardProps> = ({
     if (
       selectedCell &&
       selectedCell !== cell &&
-      selectedCell.figure?.canMove(cell)
+      selectedCell.figure?.canMove(cell) &&
+      cell.available
     ) {
       selectedCell.moveFigure(cell);
 
-      console.log(checkChess());
+      checkChess();
       swapPlayer();
       setSelectedCell(null);
     } else if (

@@ -90,8 +90,6 @@ export class Board {
           target.figure.color !== currentPlayerColor &&
           target.figure.canMove(kingCell)
         ) {
-          console.log("yep!");
-
           return true;
         }
       }

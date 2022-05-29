@@ -4,6 +4,7 @@ import blackLogo from "../../assets/black-pawn.png";
 import whiteLogo from "../../assets/white-pawn.png";
 import { Colors } from "../Colors";
 import { Cell } from "./../Cell";
+import { Queen } from "./Queen";
 
 export class Pawn extends Figure {
   isFirstStep: boolean = true;
@@ -47,6 +48,11 @@ export class Pawn extends Figure {
 
     if (!test) {
       this.isFirstStep = false;
+    }
+    const boundaryLine = this.cell.figure?.color === Colors.BLACK ? 7 : 0;
+
+    if (target.y === boundaryLine && !test) {
+      this.cell.figure = new Queen(this.color, target);
     }
   }
 }

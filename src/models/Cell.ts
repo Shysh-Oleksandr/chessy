@@ -101,10 +101,11 @@ export class Cell {
   ) {
     if (this.figure && (this.figure.canMove(target) || test)) {
       const targetFigure = target.figure;
-      this.figure.moveFigure(target, test);
       if (target.figure && !test) {
         this.addLostFigure(target.figure);
       }
+
+      this.figure.moveFigure(target, test);
 
       target.setFigure(this.figure);
       this.figure = figureToReturn;
