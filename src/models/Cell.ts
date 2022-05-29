@@ -94,14 +94,22 @@ export class Cell {
       : this.board.lostWhiteFigures.push(figure);
   }
 
-  moveFigure(target: Cell) {
-    if (this.figure && this.figure.canMove(target)) {
-      this.figure.moveFigure(target);
-      if (target.figure) {
+  moveFigure(
+    target: Cell,
+    test: boolean = false,
+    figureToReturn: Figure | null = null
+  ) {
+    if (this.figure && (this.figure.canMove(target) || test)) {
+      const targetFigure = target.figure;
+      this.figure.moveFigure(target, test);
+      if (target.figure && !test) {
         this.addLostFigure(target.figure);
       }
+
       target.setFigure(this.figure);
-      this.figure = null;
+      this.figure = figureToReturn;
+      return targetFigure;
     }
+    return null;
   }
 }

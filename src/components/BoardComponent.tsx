@@ -23,6 +23,16 @@ const BoardComponent: FC<BoardProps> = ({
   const [selectedCell, setSelectedCell] = useState<Cell | null>(
     board.selectedCell
   );
+  const [isChess, setIsChess] = useState(false);
+
+  function checkChess() {
+    const isKingUnderAttack = board.isKingUnderAttack(
+      currentPlayer?.color === Colors.BLACK ? Colors.WHITE : Colors.BLACK
+    );
+    setIsChess(isKingUnderAttack);
+
+    return isKingUnderAttack;
+  }
 
   function click(cell: Cell) {
     if (
@@ -32,11 +42,7 @@ const BoardComponent: FC<BoardProps> = ({
     ) {
       selectedCell.moveFigure(cell);
 
-      console.log(
-        board.isChess(
-          currentPlayer?.color === Colors.BLACK ? Colors.WHITE : Colors.BLACK
-        )
-      );
+      console.log(checkChess());
       swapPlayer();
       setSelectedCell(null);
     } else if (
@@ -49,11 +55,15 @@ const BoardComponent: FC<BoardProps> = ({
     }
   }
 
+  // useEffect(() => {
+  //   checkChess();
+  //   setSelectedCell(null);
+  // }, []);
+
   useEffect(() => {
+    board.selectedCell = selectedCell;
     highlightCells();
   }, [selectedCell]);
-
-  useEffect(() => {}, [currentPlayer]);
 
   function highlightCells() {
     board.highlightCells(selectedCell);
@@ -111,6 +121,7 @@ const BoardComponent: FC<BoardProps> = ({
           })}
         </ul>
       </div>
+      {isChess && <h3>Chess!</h3>}
     </div>
   );
 };

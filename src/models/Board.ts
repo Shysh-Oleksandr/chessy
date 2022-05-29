@@ -13,6 +13,7 @@ export class Board {
   lostBlackFigures: Figure[] = [];
   lostWhiteFigures: Figure[] = [];
   selectedCell: Cell | null = null;
+  name: string = "first board";
 
   public initCells() {
     for (let i = 0; i < 8; i++) {
@@ -33,7 +34,20 @@ export class Board {
       const row: Cell[] = this.cells[i];
       for (let j = 0; j < this.cells.length; j++) {
         const target: Cell = row[j];
-        target.available = !!selectedCell?.figure?.canMove(target);
+        if (selectedCell?.figure?.canMove(target)) {
+          const figureToReturn = selectedCell.moveFigure(target, true);
+
+          if (this.isKingUnderAttack(target.figure!.color)) {
+            target.moveFigure(selectedCell, true, figureToReturn);
+
+            target.available = false;
+          } else {
+            target.moveFigure(selectedCell, true, figureToReturn);
+            target.available = true;
+          }
+        } else {
+          target.available = false;
+        }
       }
     }
   }
@@ -53,7 +67,7 @@ export class Board {
     }
   }
 
-  isChess(currentPlayerColor: Colors): boolean {
+  isKingUnderAttack(currentPlayerColor: Colors): boolean {
     const kingCell = this.getKingCell(currentPlayerColor);
 
     for (let i = 0; i < this.cells.length; i++) {
@@ -76,11 +90,31 @@ export class Board {
     return false;
   }
 
+  public deepClone = (): Board => {
+    let clone: Board = Object.assign(
+      Object.create(Object.getPrototypeOf(this)),
+      this
+    );
+    clone.name = "second board";
+    const newSelectedCell = this.selectedCell;
+    if (newSelectedCell) {
+      newSelectedCell.board = clone;
+      clone.selectedCell = newSelectedCell;
+      console.log(newSelectedCell.board === clone, clone.selectedCell);
+    }
+    return clone;
+  };
+
   public getCopyBoard(): Board {
     const newBoard = new Board();
     newBoard.cells = this.cells;
     newBoard.lostBlackFigures = this.lostBlackFigures;
     newBoard.lostWhiteFigures = this.lostWhiteFigures;
+    const newSelectedCell = this.selectedCell;
+    if (newSelectedCell) {
+      newSelectedCell.board = newBoard;
+      newBoard.selectedCell = newSelectedCell;
+    }
     return newBoard;
   }
 

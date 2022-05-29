@@ -42,8 +42,11 @@ export class Pawn extends Figure {
     return false;
   }
 
-  moveFigure(target: Cell): void {
+  moveFigure(target: Cell, test: boolean = false): void {
     super.moveFigure(target);
-    this.isFirstStep = false;
+
+    if (!test) {
+      this.isFirstStep = false;
+    }
   }
 }
