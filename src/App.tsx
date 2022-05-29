@@ -15,6 +15,7 @@ const App = () => {
   const [blackPlayer, setBlackPlayer] = useState(new Player(Colors.BLACK));
   const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
   const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [isWon, setIsWon] = useState<boolean>(false);
 
   const whitePlayerTimeRef = useRef() as RefObject<HTMLInputElement>;
   const blackPlayerTimeRef = useRef() as RefObject<HTMLInputElement>;
@@ -32,6 +33,8 @@ const App = () => {
     newBoard.selectedCell = null;
     setBoard(newBoard);
     setCurrentPlayer(whitePlayer);
+    setIsWon(false);
+    setIsPaused(false);
   }
 
   function swapPlayer() {
@@ -68,6 +71,7 @@ const App = () => {
           currentPlayer={currentPlayer}
           restart={restart}
           isPaused={isPaused}
+          setIsWon={setIsWon}
         />
         <BoardComponent
           board={board}
@@ -77,7 +81,9 @@ const App = () => {
           whitePlayer={whitePlayer}
           blackPlayer={blackPlayer}
           isPaused={isPaused}
+          isWon={isWon}
           setIsPaused={setIsPaused}
+          setIsWon={setIsWon}
         />
         <div className="lost__container">
           <LostFigures

@@ -18,6 +18,8 @@ interface BoardProps {
   blackPlayer: Player | null;
   isPaused: boolean;
   setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
+  isWon: boolean;
+  setIsWon: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
@@ -30,14 +32,15 @@ const BoardComponent: FC<BoardProps> = ({
   whitePlayer,
   blackPlayer,
   isPaused,
+  isWon,
   setIsPaused,
+  setIsWon,
 }) => {
   const [selectedCell, setSelectedCell] = useState<Cell | null>(
     board.selectedCell
   );
   const [isCheck, setIsCheck] = useState(false);
   const [isCheckmate, setIsCheckmate] = useState(false);
-  const [isWon, setIsWon] = useState<boolean>(false);
 
   function checkChess() {
     const currentColor = getReverseColor(currentPlayer?.color!);
@@ -84,8 +87,6 @@ const BoardComponent: FC<BoardProps> = ({
     updateBoard();
   }
 
-  function pauseGame() {}
-
   function updateBoard() {
     const newBoard = board.getCopyBoard();
     setBoard(newBoard);
@@ -96,6 +97,10 @@ const BoardComponent: FC<BoardProps> = ({
       currentPlayer?.color === Colors.BLACK ? whitePlayer : blackPlayer;
 
     return winner?.name || winner?.color.toString();
+  }
+
+  function pauseGame() {
+    !isWon && setIsPaused(!isPaused);
   }
 
   return (
@@ -112,7 +117,7 @@ const BoardComponent: FC<BoardProps> = ({
             {isCheckmate ? "Checkmate!" : "Check!"}
           </h3>
         )}
-        <button className="pause-btn" onClick={() => setIsPaused(!isPaused)}>
+        <button className="pause-btn" onClick={pauseGame}>
           {isPaused ? <BsFillPlayFill /> : <AiOutlinePause />}
         </button>
       </div>
@@ -123,7 +128,9 @@ const BoardComponent: FC<BoardProps> = ({
             <h3 className="victory__player">
               <span>{getWinnerName()}</span> won!
             </h3>
-            <h2 className="victory__reason">{isCheckmate && "Checkmate!"}</h2>
+            <h2 className="victory__reason">
+              {isCheckmate ? "Checkmate!" : "Out of time!"}
+            </h2>
           </div>
         )}
         {isPaused && (

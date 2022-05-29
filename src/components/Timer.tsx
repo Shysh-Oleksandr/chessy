@@ -8,6 +8,7 @@ interface TimerProps {
   blackPlayer: Player | null;
   restart: () => void;
   isPaused: boolean;
+  setIsWon: React.Dispatch<React.SetStateAction<boolean>>;
   setIsGameStarted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -18,6 +19,7 @@ const Timer = ({
   blackPlayer,
   setIsGameStarted,
   isPaused,
+  setIsWon,
 }: TimerProps) => {
   const [whiteTime, setWhiteTime] = useState<number>(whitePlayer?.time || 300);
   const [blackTime, setBlackTime] = useState<number>(blackPlayer?.time || 300);
@@ -33,6 +35,13 @@ const Timer = ({
       isPaused ? clearInterval(timer.current) : startTimer();
     }
   }, [isPaused]);
+
+  useEffect(() => {
+    if (whiteTime <= 0 || blackTime <= 0) {
+      setIsWon(true);
+      timer.current && clearInterval(timer.current);
+    }
+  }, [whiteTime, blackTime]);
 
   function startTimer() {
     if (timer.current) {
