@@ -131,6 +131,8 @@ const BoardComponent: FC<BoardProps> = ({
               <React.Fragment key={index}>
                 {row.map((cell) => (
                   <CellComponent
+                    isCheck={isCheck}
+                    currentPlayerColor={currentPlayer?.color!}
                     selected={
                       cell.x === selectedCell?.x && cell.y === selectedCell?.y
                     }
