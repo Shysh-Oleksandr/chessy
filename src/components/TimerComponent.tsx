@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Colors } from "../models/Colors";
 import { Player } from "../models/Player";
 
-interface TimerProps {
+interface TimerComponentProps {
   currentPlayer: Player | null;
   whitePlayer: Player | null;
   blackPlayer: Player | null;
@@ -12,7 +12,7 @@ interface TimerProps {
   setIsGameStarted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Timer = ({
+const TimerComponent = ({
   currentPlayer,
   restart,
   whitePlayer,
@@ -20,7 +20,7 @@ const Timer = ({
   setIsGameStarted,
   isPaused,
   setIsWon,
-}: TimerProps) => {
+}: TimerComponentProps) => {
   const [whiteTime, setWhiteTime] = useState<number>(whitePlayer?.time || 300);
   const [blackTime, setBlackTime] = useState<number>(blackPlayer?.time || 300);
 
@@ -78,4 +78,4 @@ const Timer = ({
   );
 };
 
-export default Timer;
+export default TimerComponent;

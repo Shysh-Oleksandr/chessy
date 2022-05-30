@@ -97,6 +97,7 @@ export class Pawn extends Figure {
         target.x,
         target.y - direction
       );
+      this.cell.addLostFigure(pawnToCapture.figure!);
       pawnToCapture.figure = null;
     }
     // Managing first step.
