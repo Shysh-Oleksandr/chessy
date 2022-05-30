@@ -21,15 +21,26 @@ export class King extends Figure {
     const dx = Math.abs(this.cell.x - target.x);
     const dy = Math.abs(this.cell.y - target.y);
 
-    // Check short castling
-    if (target.x + 1 < 8 && target.x - 1 >= 0) {
-      const rookPosition = this.cell.board.getCell(target.x + 1, target.y);
+    // Check castling
+    if (target.x + 1 < 8 && target.x - 2 >= 0) {
+      const leftRookPosition = this.cell.board.getCell(target.x - 2, target.y);
+      const rightRookPosition = this.cell.board.getCell(target.x + 1, target.y);
+
+      // Check for short castling.
+      const isRightRook =
+        rightRookPosition.figure instanceof Rook &&
+        rightRookPosition.figure.isFirstStep &&
+        this.cell.isEmptyHorizontal(rightRookPosition);
+
+      // Check for long castling.
+      const isLeftRook =
+        leftRookPosition.figure instanceof Rook &&
+        leftRookPosition.figure.isFirstStep &&
+        this.cell.isEmptyHorizontal(leftRookPosition);
 
       if (
-        rookPosition.figure instanceof Rook &&
-        rookPosition.figure.isFirstStep &&
+        (isRightRook || isLeftRook) &&
         this.isFirstStep &&
-        this.cell.isEmptyHorizontal(rookPosition) &&
         !this.cell.board.isKingUnderAttack(this.color)
       ) {
         return true;
@@ -47,9 +58,13 @@ export class King extends Figure {
     // Castling
     const dx = Math.abs(this.cell.x - target.x);
     if (dx === 2) {
-      const rookPosition = this.cell.board.getCell(target.x + 1, target.y);
+      const isLongCastling = target.x < this.cell.x;
+      const rookPosition = isLongCastling
+        ? this.cell.board.getCell(target.x - 2, target.y)
+        : this.cell.board.getCell(target.x + 1, target.y);
+      const targetRookPositionX = isLongCastling ? target.x + 1 : target.x - 1;
       const targetRookPosition = this.cell.board.getCell(
-        target.x - 1,
+        targetRookPositionX,
         target.y
       );
       rookPosition.moveFigure(targetRookPosition);
