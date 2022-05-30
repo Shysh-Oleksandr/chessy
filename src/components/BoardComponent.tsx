@@ -52,6 +52,7 @@ const BoardComponent: FC<BoardProps> = ({
       const isCheckmate = board.isCheckmate(kingsColor);
       setIsCheckmate(isCheckmate);
       setIsWon(isCheckmate);
+      isCheckmate && setIsPaused(true);
     }
 
     return isKingUnderAttack;
@@ -123,7 +124,7 @@ const BoardComponent: FC<BoardProps> = ({
             isCheckmate={isCheckmate}
           />
         )}
-        {isPaused && <PausedPanel setIsPaused={setIsPaused} />}
+        {isPaused && !isWon && <PausedPanel setIsPaused={setIsPaused} />}
 
         <div className="board">
           {board.cells.map((row, index) => {

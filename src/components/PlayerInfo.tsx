@@ -23,7 +23,7 @@ const PlayerInfo = ({
         className="players__label players__name"
       >
         Player {getPlayerNumber()}
-        <PlayerColor color={Colors.WHITE} />
+        <PlayerColor color={whitePlayer ? Colors.WHITE : Colors.BLACK} />
       </label>
       <input
         ref={playerNameRef}
