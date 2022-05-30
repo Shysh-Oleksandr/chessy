@@ -6,6 +6,8 @@ import { Colors } from "../Colors";
 import { Cell } from "./../Cell";
 
 export class Rook extends Figure {
+  isFirstStep: boolean = true;
+
   constructor(color: Colors, cell: Cell) {
     super(color, cell);
     this.logo = color === Colors.BLACK ? blackLogo : whiteLogo;
@@ -19,5 +21,11 @@ export class Rook extends Figure {
     )
       return true;
     return false;
+  }
+
+  moveFigure(target: Cell, test?: boolean): void {
+    if (test) return;
+
+    this.isFirstStep = false;
   }
 }

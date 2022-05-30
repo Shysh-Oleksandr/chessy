@@ -48,7 +48,6 @@ const BoardComponent: FC<BoardProps> = ({
     setIsCheck(isKingUnderAttack);
     if (isKingUnderAttack) {
       const isCheckmate = board.isCheckmate(currentColor);
-      console.log(isCheckmate);
       setIsCheckmate(isCheckmate);
       setIsWon(isCheckmate);
     }
