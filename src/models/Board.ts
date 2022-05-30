@@ -1,14 +1,13 @@
+import { getReverseColor } from "../utils/functions";
 import { Cell } from "./Cell";
 import { Colors } from "./Colors";
-import { Pawn } from "./figures/Pawn";
-import { Queen } from "./figures/Queen";
+import { Bishop } from "./figures/Bishop";
+import { Figure, FigureNames } from "./figures/Figure";
 import { King } from "./figures/King";
 import { Knight } from "./figures/Knight";
-import { Bishop } from "./figures/Bishop";
+import { Pawn } from "./figures/Pawn";
+import { Queen } from "./figures/Queen";
 import { Rook } from "./figures/Rook";
-import { Figure, FigureNames } from "./figures/Figure";
-import { Player } from "./Player";
-import { getReverseColor } from "../utils/functions";
 
 export class Board {
   cells: Cell[][] = [];
@@ -119,7 +118,6 @@ export class Board {
       this.isKingUnderAttack(currentPlayerColor) &&
       !this.areTherePossibleMoves(getReverseColor(currentPlayerColor))
     ) {
-      console.log("Checkmate!");
       return true;
     }
     return false;

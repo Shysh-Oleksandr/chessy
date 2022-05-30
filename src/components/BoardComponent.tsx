@@ -1,13 +1,14 @@
 import React, { FC, useEffect, useState } from "react";
-import { Board } from "./../models/Board";
-import CellComponent from "./CellComponent";
-import { Cell } from "./../models/Cell";
-import { Player } from "../models/Player";
 import { Colors } from "../models/Colors";
-import PlayerColor from "./UI/PlayerColor";
+import { Player } from "../models/Player";
+import { Board } from "./../models/Board";
+import { Cell } from "./../models/Cell";
 import { getReverseColor } from "./../utils/functions";
-import { AiOutlinePause } from "react-icons/ai";
-import { BsFillPlayFill } from "react-icons/bs";
+import BoardNumeration from "./BoardNumeration";
+import CellComponent from "./CellComponent";
+import GameStatus from "./GameStatus";
+import PausedPanel from "./PausedPanel";
+import VictoryPanel from "./VictoryPanel";
 
 interface BoardProps {
   board: Board;
@@ -21,8 +22,6 @@ interface BoardProps {
   isWon: boolean;
   setIsWon: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
 const BoardComponent: FC<BoardProps> = ({
   board,
@@ -42,12 +41,15 @@ const BoardComponent: FC<BoardProps> = ({
   const [isCheck, setIsCheck] = useState(false);
   const [isCheckmate, setIsCheckmate] = useState(false);
 
-  function checkChess() {
-    const currentColor = getReverseColor(currentPlayer?.color!);
-    const isKingUnderAttack = board.isKingUnderAttack(currentColor);
+  // Checking the check. :)
+  function checkCheck(): boolean {
+    const kingsColor = getReverseColor(currentPlayer?.color!);
+    const isKingUnderAttack = board.isKingUnderAttack(kingsColor);
     setIsCheck(isKingUnderAttack);
+
+    // If check, check checkmate.
     if (isKingUnderAttack) {
-      const isCheckmate = board.isCheckmate(currentColor);
+      const isCheckmate = board.isCheckmate(kingsColor);
       setIsCheckmate(isCheckmate);
       setIsWon(isCheckmate);
     }
@@ -55,7 +57,7 @@ const BoardComponent: FC<BoardProps> = ({
     return isKingUnderAttack;
   }
 
-  function click(cell: Cell) {
+  function click(cell: Cell): void {
     if (
       selectedCell &&
       selectedCell !== cell &&
@@ -64,8 +66,8 @@ const BoardComponent: FC<BoardProps> = ({
     ) {
       selectedCell.moveFigure(cell);
 
-      checkChess();
       swapPlayer();
+      checkCheck();
       setSelectedCell(null);
     } else if (
       selectedCell !== cell &&
@@ -77,6 +79,7 @@ const BoardComponent: FC<BoardProps> = ({
     }
   }
 
+  // Everytime we select a cell, show possible moves.
   useEffect(() => {
     board.selectedCell = selectedCell;
     highlightCells();
@@ -92,7 +95,7 @@ const BoardComponent: FC<BoardProps> = ({
     setBoard(newBoard);
   }
 
-  function getWinnerName() {
+  function getWinnerName(): string | undefined {
     const winner =
       currentPlayer?.color === Colors.BLACK ? whitePlayer : blackPlayer;
 
@@ -105,49 +108,23 @@ const BoardComponent: FC<BoardProps> = ({
 
   return (
     <div>
-      <div className="game-status">
-        <h3 className="currentPlayer">
-          <span>
-            Current Player: {currentPlayer?.name || currentPlayer?.color}
-          </span>
-          <PlayerColor color={currentPlayer!.color} />
-        </h3>
-        {isCheck && (
-          <h3 className="check-label">
-            {isCheckmate ? "Checkmate!" : "Check!"}
-          </h3>
-        )}
-        <button className="pause-btn" onClick={pauseGame}>
-          {isPaused ? <BsFillPlayFill /> : <AiOutlinePause />}
-        </button>
-      </div>
+      <GameStatus
+        currentPlayer={currentPlayer}
+        isCheck={isCheck}
+        isCheckmate={isCheckmate}
+        isPaused={isPaused}
+        pauseGame={pauseGame}
+      />
 
       <div className="board-container">
         {isWon && (
-          <div className="victory">
-            <h3 className="victory__player">
-              <span>{getWinnerName()}</span> won!
-            </h3>
-            <h2 className="victory__reason">
-              {isCheckmate ? "Checkmate!" : "Out of time!"}
-            </h2>
-          </div>
+          <VictoryPanel
+            getWinnerName={getWinnerName}
+            isCheckmate={isCheckmate}
+          />
         )}
-        {isPaused && (
-          <div className="paused" onClick={() => setIsPaused(false)}>
-            <h2>Paused</h2>
-            <p>Click to continue...</p>
-          </div>
-        )}
-        <ul className="numbers-line">
-          {letters.map((letter, index) => {
-            return (
-              <li key={letter + index} className="numbers-line__item">
-                {index + 1}
-              </li>
-            );
-          })}
-        </ul>
+        {isPaused && <PausedPanel setIsPaused={setIsPaused} />}
+
         <div className="board">
           {board.cells.map((row, index) => {
             return (
@@ -166,15 +143,8 @@ const BoardComponent: FC<BoardProps> = ({
             );
           })}
         </div>
-        <ul className="letters-line">
-          {letters.map((letter, index) => {
-            return (
-              <li key={letter + index} className="letters-line__item">
-                {letter}
-              </li>
-            );
-          })}
-        </ul>
+        <BoardNumeration isNumbers={true} />
+        <BoardNumeration isNumbers={false} />
       </div>
     </div>
   );

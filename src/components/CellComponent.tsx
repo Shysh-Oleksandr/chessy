@@ -18,7 +18,7 @@ const CellComponent: FC<CellProps> = ({ cell, selected, click }) => {
       ].join(" ")}
     >
       {cell.available && !cell.figure && <div className="available"></div>}
-      {cell.figure?.logo && <img src={cell.figure.logo} />}
+      {cell.figure?.logo && <img src={cell.figure.logo} alt="Figure" />}
     </div>
   );
 };

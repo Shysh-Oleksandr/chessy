@@ -1,11 +1,9 @@
-import { Figure, FigureNames } from "./Figure";
-
 import blackLogo from "../../assets/black-king.png";
 import whiteLogo from "../../assets/white-king.png";
 import { Colors } from "../Colors";
 import { Cell } from "./../Cell";
+import { Figure, FigureNames } from "./Figure";
 import { Rook } from "./Rook";
-import { getReverseColor } from "../../utils/functions";
 
 export class King extends Figure {
   isFirstStep: boolean = true;

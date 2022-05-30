@@ -15,7 +15,14 @@ function LostFigures({ title, figures }: LostFiguresProps) {
           <div key={figure.id} className="lost__figure">
             <h4>{figure.name}</h4>
             <div>
-              {figure.logo && <img width={20} height={20} src={figure.logo} />}
+              {figure.logo && (
+                <img
+                  width={20}
+                  height={20}
+                  alt="Lost Figure"
+                  src={figure.logo}
+                />
+              )}
             </div>
           </div>
         );

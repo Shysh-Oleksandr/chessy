@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Colors } from "../models/Colors";
 import { Player } from "../models/Player";
 
@@ -26,24 +26,7 @@ const Timer = ({
 
   const timer = useRef<null | ReturnType<typeof setInterval>>(null);
 
-  useEffect(() => {
-    startTimer();
-  }, [currentPlayer]);
-
-  useEffect(() => {
-    if (timer.current) {
-      isPaused ? clearInterval(timer.current) : startTimer();
-    }
-  }, [isPaused]);
-
-  useEffect(() => {
-    if (whiteTime <= 0 || blackTime <= 0) {
-      setIsWon(true);
-      timer.current && clearInterval(timer.current);
-    }
-  }, [whiteTime, blackTime]);
-
-  function startTimer() {
+  const startTimer = useCallback(() => {
     if (timer.current) {
       clearInterval(timer.current);
     }
@@ -52,7 +35,24 @@ const Timer = ({
         ? decrementWhiteTimer
         : decrementBlackTimer;
     timer.current = setInterval(callback, 1000);
-  }
+  }, [currentPlayer?.color]);
+
+  useEffect(() => {
+    startTimer();
+  }, [currentPlayer, startTimer]);
+
+  useEffect(() => {
+    if (timer.current) {
+      isPaused ? clearInterval(timer.current) : startTimer();
+    }
+  }, [isPaused, startTimer]);
+
+  useEffect(() => {
+    if (whiteTime <= 0 || blackTime <= 0) {
+      setIsWon(true);
+      timer.current && clearInterval(timer.current);
+    }
+  }, [whiteTime, blackTime, setIsWon]);
 
   function decrementBlackTimer() {
     setBlackTime((prev) => prev - 1);
