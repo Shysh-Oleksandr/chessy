@@ -553,7 +553,7 @@ h6 {
   padding-bottom: 4rem;
   @include adaptive-value("padding-bottom", 50, 30, 1);
   border-radius: 0.7rem;
-  color: #c4b9b9;
+  color: #f3e8e8;
 
   &__player {
     font-size: 3.5rem;
@@ -577,7 +577,7 @@ h6 {
 }
 
 .paused {
-  color: #dad3d3;
+  color: #f3e8e8;
   h2 {
     font-size: 5rem;
     @include adaptive-value("font-size", 60, 50, 1);
