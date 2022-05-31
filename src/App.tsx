@@ -78,7 +78,7 @@ const App = () => {
     );
 
   return (
-    <div className="app">
+    <div className="app app-welcome">
       <WelcomeComponent
         setBlackPlayer={setBlackPlayer}
         setWhitePlayer={setWhitePlayer}
