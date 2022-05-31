@@ -8,7 +8,9 @@ interface TimerComponentProps {
   blackPlayer: Player | null;
   restart: () => void;
   isPaused: boolean;
+  isWon: boolean;
   setIsWon: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsResign: React.Dispatch<React.SetStateAction<boolean>>;
   setIsGameStarted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -20,6 +22,8 @@ const TimerComponent = ({
   setIsGameStarted,
   isPaused,
   setIsWon,
+  setIsResign,
+  isWon,
 }: TimerComponentProps) => {
   const [whiteTime, setWhiteTime] = useState<number>(whitePlayer?.time || 300);
   const [blackTime, setBlackTime] = useState<number>(blackPlayer?.time || 300);
@@ -43,9 +47,9 @@ const TimerComponent = ({
 
   useEffect(() => {
     if (timer.current) {
-      isPaused ? clearInterval(timer.current) : startTimer();
+      isPaused || isWon ? clearInterval(timer.current) : startTimer();
     }
-  }, [isPaused, startTimer]);
+  }, [isPaused, startTimer, isWon]);
 
   useEffect(() => {
     if (whiteTime <= 0 || blackTime <= 0) {
@@ -72,6 +76,14 @@ const TimerComponent = ({
     <div className="timerPanel">
       <button onClick={() => setIsGameStarted(false)}>Back to menu</button>
       <button onClick={handleRestart}>Restart Game</button>
+      <button
+        onClick={() => {
+          setIsResign(true);
+          setIsWon(true);
+        }}
+      >
+        Resign
+      </button>
       <h2>Black - {blackTime}</h2>
       <h2>White - {whiteTime}</h2>
     </div>

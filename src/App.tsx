@@ -16,6 +16,7 @@ const App = () => {
   const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [isWon, setIsWon] = useState<boolean>(false);
+  const [isResign, setIsResign] = useState<boolean>(false);
 
   useEffect(() => {
     restart();
@@ -50,6 +51,8 @@ const App = () => {
             restart={restart}
             isPaused={isPaused}
             setIsWon={setIsWon}
+            setIsResign={setIsResign}
+            isWon={isWon}
           />
           <BoardComponent
             board={board}
@@ -60,6 +63,7 @@ const App = () => {
             blackPlayer={blackPlayer}
             isPaused={isPaused}
             isWon={isWon}
+            isResign={isResign}
             setIsPaused={setIsPaused}
             setIsWon={setIsWon}
           />

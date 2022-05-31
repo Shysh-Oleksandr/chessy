@@ -18,6 +18,7 @@ interface BoardProps {
   whitePlayer: Player | null;
   blackPlayer: Player | null;
   isPaused: boolean;
+  isResign: boolean;
   setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
   isWon: boolean;
   setIsWon: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,6 +33,7 @@ const BoardComponent: FC<BoardProps> = ({
   blackPlayer,
   isPaused,
   isWon,
+  isResign,
   setIsPaused,
   setIsWon,
 }) => {
@@ -120,6 +122,7 @@ const BoardComponent: FC<BoardProps> = ({
       <div className="board-container">
         {isWon && (
           <VictoryPanel
+            isResign={isResign}
             getWinnerName={getWinnerName}
             isCheckmate={isCheckmate}
           />

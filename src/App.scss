@@ -493,6 +493,7 @@ h6 {
     @include adaptive-value("padding-right", 22, 18, 1);
     border-radius: 0.5rem;
     font-size: 1.5rem;
+    width: 100%;
     @include adaptive-value("font-size", 20, 16, 1);
 
     margin: 0.5rem 0;
