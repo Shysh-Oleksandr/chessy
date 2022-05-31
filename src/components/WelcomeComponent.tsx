@@ -6,12 +6,14 @@ interface WelcomeComponentProps {
   setBlackPlayer: React.Dispatch<React.SetStateAction<Player>>;
   setWhitePlayer: React.Dispatch<React.SetStateAction<Player>>;
   setIsGameStarted: React.Dispatch<React.SetStateAction<boolean>>;
+  restart: () => void;
 }
 
 const WelcomeComponent = ({
   setBlackPlayer,
   setWhitePlayer,
   setIsGameStarted,
+  restart,
 }: WelcomeComponentProps) => {
   const whitePlayerTimeRef = useRef() as RefObject<HTMLInputElement>;
   const blackPlayerTimeRef = useRef() as RefObject<HTMLInputElement>;
@@ -22,6 +24,7 @@ const WelcomeComponent = ({
     e.preventDefault();
 
     setIsGameStarted(true);
+    restart();
     setWhitePlayer((prev) => {
       let whiteTime = Number(whitePlayerTimeRef.current?.value);
       prev.time = whiteTime > 10 ? whiteTime : 10;

@@ -31,6 +31,7 @@ const App = () => {
     setCurrentPlayer(whitePlayer);
     setIsWon(false);
     setIsPaused(false);
+    setIsResign(false);
   }
 
   function swapPlayer() {
@@ -87,6 +88,7 @@ const App = () => {
         setBlackPlayer={setBlackPlayer}
         setWhitePlayer={setWhitePlayer}
         setIsGameStarted={setIsGameStarted}
+        restart={restart}
       />
     </div>
   );
